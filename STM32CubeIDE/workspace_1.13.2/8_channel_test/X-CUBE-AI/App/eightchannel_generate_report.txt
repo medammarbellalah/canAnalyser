@@ -1,0 +1,191 @@
+ST Edge AI Core v2.2.0-20266 2adc00962
+Created date          : 2025-11-10 14:39:21
+Parameters            : generate --target stm32f4 --name eightchannel -m D:/NeoBionics/emg data/model00107112025/model_quant_int8002.tflite --compression none --verbosity 1 --workspace C:/Users/med ammar bellalah/AppData/Local/Temp/mxAI_workspace214396965018003518141718387468641 --output C:/Users/med ammar bellalah/.stm32cubemx/eightchannel_output
+
+Exec/report summary (generate)
+--------------------------------------------------------------------------------------------------------------------------
+model file         :   D:\NeoBionics\emg data\model00107112025\model_quant_int8002.tflite                                 
+type               :   tflite                                                                                             
+c_name             :   eightchannel                                                                                       
+compression        :   none                                                                                               
+options            :   allocate-inputs, allocate-outputs                                                                  
+optimization       :   balanced                                                                                           
+target/series      :   stm32f4                                                                                            
+workspace dir      :   C:\Users\med ammar bellalah\AppData\Local\Temp\mxAI_workspace214396965018003518141718387468641     
+output dir         :   C:\Users\med ammar bellalah\.stm32cubemx\eightchannel_output                                       
+model_fmt          :   ss/sa per channel                                                                                  
+model_name         :   model_quant_int8002                                                                                
+model_hash         :   0x37f019137e074479e808a304465a13c1                                                                 
+params #           :   343 items (436 B)                                                                                  
+--------------------------------------------------------------------------------------------------------------------------
+input 1/1          :   'serving_default_ke..tensor_640', int8(1x8), 8 Bytes, QLinear(0.070308536,-12,int8), activations   
+output 1/1         :   'nl_3', int8(1x7), 7 Bytes, QLinear(0.003906250,-128,int8), activations                            
+macc               :   448                                                                                                
+weights (ro)       :   436 B (436 B) (1 segment) / -936(-68.2%) vs float model                                            
+activations (rw)   :   504 B (504 B) (1 segment) *                                                                        
+ram (total)        :   504 B (504 B) = 504 + 0 + 0                                                                        
+--------------------------------------------------------------------------------------------------------------------------
+(*) 'input'/'output' buffers are allocated in the activations buffer
+
+Model name - model_quant_int8002
+------ ------------------------------------------ ------------ ------------ ------ -------------------------------- --- --------------- --------------- --------------------- 
+m_id   layer (type,original)                      oshape       param/size     macc                     connected to   | c_size          c_macc          c_type                
+------ ------------------------------------------ ------------ ------------ ------ -------------------------------- --- --------------- --------------- --------------------- 
+0      serving_default_ke..tensor_640 (Input, )   [b:1,c:8]                                                           | +192(+100.0%)   +144(+100.0%)   Dense_[0]             
+       tfl_pseudo_qconst5 (Placeholder, )         [b:16,c:8]   128/128                                                | -128(-100.0%)                   
+       tfl_pseudo_qconst4 (Placeholder, )         [b:16]       16/64                                                  | -64(-100.0%)                    
+       gemm_0 (Gemm, FULLY_CONNECTED)             [b:1,c:16]                   144   serving_default_ke..tensor_640   |                 -144(-100.0%)   
+                                                                                                 tfl_pseudo_qconst5   | 
+                                                                                                 tfl_pseudo_qconst4   | 
+       nl_0_nl (Nonlinearity, FULLY_CONNECTED)    [b:1,c:16]                    16                           gemm_0   |                 -16(-100.0%)    
+------ ------------------------------------------ ------------ ------------ ------ -------------------------------- --- --------------- --------------- --------------------- 
+1      tfl_pseudo_qconst3 (Placeholder, )         [b:8,c:16]   128/128                                                | +32(+25.0%)     +136(+100.0%)   Dense_[1]             
+       tfl_pseudo_qconst2 (Placeholder, )         [b:8]        8/32                                                   | -32(-100.0%)                    
+       gemm_1 (Gemm, FULLY_CONNECTED)             [b:1,c:8]                    136                          nl_0_nl   |                 -136(-100.0%)   
+                                                                                                 tfl_pseudo_qconst3   | 
+                                                                                                 tfl_pseudo_qconst2   | 
+       nl_1_nl (Nonlinearity, FULLY_CONNECTED)    [b:1,c:8]                      8                           gemm_1   |                 -8(-100.0%)     
+------ ------------------------------------------ ------------ ------------ ------ -------------------------------- --- --------------- --------------- --------------------- 
+2      tfl_pseudo_qconst1 (Placeholder, )         [b:7,c:8]    56/56                                                  | +28(+50.0%)     +63(+100.0%)    Dense_[2]             
+       tfl_pseudo_qconst (Placeholder, )          [b:7]        7/28                                                   | -28(-100.0%)                    
+       gemm_2 (Gemm, FULLY_CONNECTED)             [b:1,c:7]                     63                          nl_1_nl   |                 -63(-100.0%)    
+                                                                                                 tfl_pseudo_qconst1   | 
+                                                                                                  tfl_pseudo_qconst   | 
+------ ------------------------------------------ ------------ ------------ ------ -------------------------------- --- --------------- --------------- --------------------- 
+3      nl_3 (Nonlinearity, SOFTMAX)               [b:1,c:7]                    105                           gemm_2   |                                 Nonlinearity_[o][3]   
+------ ------------------------------------------ ------------ ------------ ------ -------------------------------- --- --------------- --------------- --------------------- 
+model/c-model: macc=472/448 -24(-5.1%) weights=436/436  activations=--/504 io=--/0
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name            : model_quant_int8002
+c-name                : eightchannel
+c-node #              : 4
+c-array #             : 15
+activations size      : 504 (1 segment)
+weights size          : 436 (1 segment)
+macc                  : 448
+inputs                : ['serving_default_keras_tensor_640_output']
+outputs               : ['nl_3_output']
+
+C-Arrays (15)
+------ ----------------------------------------- ----------- ------------------------- ----------- --------- 
+c_id   name (*_array)                            item/size   domain/mem-pool           c-type      comment   
+------ ----------------------------------------- ----------- ------------------------- ----------- --------- 
+0      gemm_0_bias                               16/64       weights/weights           const s32             
+1      gemm_0_output                             16/16       activations/**default**   s8                    
+2      gemm_0_scratch0                           88/176      activations/**default**   s16                   
+3      gemm_0_weights                            128/128     weights/weights           const s8              
+4      gemm_1_bias                               8/32        weights/weights           const s32             
+5      gemm_1_output                             8/8         activations/**default**   s8                    
+6      gemm_1_scratch0                           56/112      activations/**default**   s16                   
+7      gemm_1_weights                            128/128     weights/weights           const s8              
+8      gemm_2_bias                               7/28        weights/weights           const s32             
+9      gemm_2_output                             7/7         activations/**default**   s8                    
+10     gemm_2_scratch0                           43/86       activations/**default**   s16                   
+11     gemm_2_weights                            56/56       weights/weights           const s8              
+12     nl_3_output                               7/7         activations/**default**   s8          /output   
+13     nl_3_scratch0                             124/496     activations/**default**   s32                   
+14     serving_default_keras_tensor_640_output   8/8         activations/**default**   s8          /input    
+------ ----------------------------------------- ----------- ------------------------- ----------- --------- 
+
+C-Layers (4)
+------ ---------------- ---- --------------- ------ ----- -------------------------------------------- ------------------ 
+c_id   name (*_layer)   id   layer_type      macc   rom   tensors                                      shape (array id)   
+------ ---------------- ---- --------------- ------ ----- -------------------------------------------- ------------------ 
+0      gemm_0           0    Dense           144    192   I: serving_default_keras_tensor_640_output   int8(1x8) (14)     
+                                                          S: gemm_0_scratch0                                              
+                                                          W: gemm_0_weights                            int8(16x8) (3)     
+                                                          W: gemm_0_bias                               int32(16) (0)      
+                                                          O: gemm_0_output                             int8(1x16) (1)     
+------ ---------------- ---- --------------- ------ ----- -------------------------------------------- ------------------ 
+1      gemm_1           1    Dense           136    160   I: gemm_0_output                             int8(1x16) (1)     
+                                                          S: gemm_1_scratch0                                              
+                                                          W: gemm_1_weights                            int8(8x16) (7)     
+                                                          W: gemm_1_bias                               int32(8) (4)       
+                                                          O: gemm_1_output                             int8(1x8) (5)      
+------ ---------------- ---- --------------- ------ ----- -------------------------------------------- ------------------ 
+2      gemm_2           2    Dense           63     84    I: gemm_1_output                             int8(1x8) (5)      
+                                                          S: gemm_2_scratch0                                              
+                                                          W: gemm_2_weights                            int8(7x8) (11)     
+                                                          W: gemm_2_bias                               int32(7) (8)       
+                                                          O: gemm_2_output                             int8(1x7) (9)      
+------ ---------------- ---- --------------- ------ ----- -------------------------------------------- ------------------ 
+3      nl_3             3    Nonlinearity    105    0     I: gemm_2_output                             int8(1x7) (9)      
+                                                          S: nl_3_scratch0                                                
+                                                          O: nl_3_output                               int8(1x7) (12)     
+------ ---------------- ---- --------------- ------ ----- -------------------------------------------- ------------------ 
+
+
+
+Number of operations per c-layer
+------- ------ --------------------- ----- ------------ 
+c_id    m_id   name (type)             #op         type 
+------- ------ --------------------- ----- ------------ 
+0       0      gemm_0 (Dense)          144   smul_s8_s8 
+1       1      gemm_1 (Dense)          136   smul_s8_s8 
+2       2      gemm_2 (Dense)           63   smul_s8_s8 
+3       3      nl_3 (Nonlinearity)     105     op_s8_s8 
+------- ------ --------------------- ----- ------------ 
+total                                  448 
+
+Number of operation types
+---------------- ----- ----------- 
+operation type       #           % 
+---------------- ----- ----------- 
+smul_s8_s8         343       76.6% 
+op_s8_s8           105       23.4% 
+
+Complexity report (model)
+------ ---------------------------------- ------------------------- ------------------------- ------ 
+m_id   name                               c_macc                    c_rom                     c_id   
+------ ---------------------------------- ------------------------- ------------------------- ------ 
+0      serving_default_keras_tensor_640   ||||||||||||||||  32.1%   ||||||||||||||||  44.0%   [0]    
+1      tfl_pseudo_qconst3                 |||||||||||||||   30.4%   |||||||||||||     36.7%   [1]    
+2      tfl_pseudo_qconst1                 |||||||           14.1%   |||||||           19.3%   [2]    
+3      nl_3                               |||||||||||       23.4%   |                  0.0%   [3]    
+------ ---------------------------------- ------------------------- ------------------------- ------ 
+macc=448 weights=436 act=504 ram_io=0
+ 
+ Requested memory size by section - "stm32f4" target
+ ------------------------------ -------- -------- ------- ----- 
+ module                             text   rodata    data   bss 
+ ------------------------------ -------- -------- ------- ----- 
+ NetworkRuntime1020_CM4_GCC.a     10,752        0       0     0 
+ eightchannel.o                      570      368   1,744   116 
+ eightchannel_data.o                  48       16      88     0 
+ lib (toolchain)*                      0        0       0     0 
+ ------------------------------ -------- -------- ------- ----- 
+ RT total**                       11,370      384   1,832   116 
+ ------------------------------ -------- -------- ------- ----- 
+ weights                               0      440       0     0 
+ activations                           0        0       0   504 
+ io                                    0        0       0     0 
+ ------------------------------ -------- -------- ------- ----- 
+ TOTAL                            11,370      824   1,832   620 
+ ------------------------------ -------- -------- ------- ----- 
+ *  toolchain objects (libm/libgcc*)
+ ** RT AI runtime objects (kernels+infrastructure)
+  
+  Summary - "stm32f4" target
+  ---------------------------------------------------
+               FLASH (ro)      %*   RAM (rw)       % 
+  ---------------------------------------------------
+  RT total         13,586   96.9%      1,948   79.4% 
+  ---------------------------------------------------
+  TOTAL            14,026              2,452         
+  ---------------------------------------------------
+  *  rt/total
+
+
+Generated files (7)
+----------------------------------------------------------------------------------------- 
+C:\Users\med ammar bellalah\.stm32cubemx\eightchannel_output\eightchannel_data_params.h   
+C:\Users\med ammar bellalah\.stm32cubemx\eightchannel_output\eightchannel_data_params.c   
+C:\Users\med ammar bellalah\.stm32cubemx\eightchannel_output\eightchannel_data.h          
+C:\Users\med ammar bellalah\.stm32cubemx\eightchannel_output\eightchannel_data.c          
+C:\Users\med ammar bellalah\.stm32cubemx\eightchannel_output\eightchannel_config.h        
+C:\Users\med ammar bellalah\.stm32cubemx\eightchannel_output\eightchannel.h               
+C:\Users\med ammar bellalah\.stm32cubemx\eightchannel_output\eightchannel.c               
